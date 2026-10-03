@@ -23,6 +23,7 @@ from sqlalchemy import (
     UniqueConstraint,
     select,
 )
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -113,15 +114,25 @@ async def init_db(engine: AsyncEngine) -> None:
 
 async def upsert_user(
     session: AsyncSession, user_id: int, first_name: str | None, username: str | None
-) -> None:
+) -> bool:
+    """Создаёт или обновляет пользователя. Возвращает True, если он новый."""
     user = await session.get(User, user_id)
     if user is None:
         session.add(User(id=user_id, first_name=first_name, username=username))
-    else:
-        user.first_name = first_name
-        user.username = username
-        user.last_seen_at = _utcnow()
+        try:
+            await session.commit()
+            return True
+        except IntegrityError:
+            # Два первых запроса одновременно (/start и Mini App) — второй уже создал запись.
+            await session.rollback()
+            user = await session.get(User, user_id)
+            if user is None:
+                raise
+    user.first_name = first_name
+    user.username = username
+    user.last_seen_at = _utcnow()
     await session.commit()
+    return False
 
 
 async def get_subscriptions(session: AsyncSession, user_id: int) -> list[SubRecord]:

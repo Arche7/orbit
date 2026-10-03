@@ -63,11 +63,14 @@ def verify_init_data(
     received_hash = fields.pop("hash", None)
     if not received_hash:
         raise InitDataError("в initData нет подписи")
-    fields.pop("signature", None)  # поле для сторонних проверок, в hash не входит
-
-    expected = sign(fields, bot_token)
-    if not hmac.compare_digest(expected, received_hash):
+    # Поле signature (Bot API 8.0+) входит в строку проверки — его НЕ убираем,
+    # так же делает aiogram (check_webapp_signature). Вариант без signature
+    # оставлен как запасной: подделать его без токена бота всё равно нельзя.
+    without_signature = {k: v for k, v in fields.items() if k != "signature"}
+    candidates = [fields] if without_signature == fields else [fields, without_signature]
+    if not any(hmac.compare_digest(sign(c, bot_token), received_hash) for c in candidates):
         raise InitDataError("подпись initData не совпала")
+    fields = without_signature
 
     try:
         auth_date = int(fields.get("auth_date", "0"))

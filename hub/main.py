@@ -58,7 +58,7 @@ def create_app(settings: Settings | None = None, bot=None, run_polling: bool = T
         app.state.deps = Deps(catalog=catalog, settings=settings, sessionmaker=sessionmaker, bot=tg_bot)
 
         if dispatcher is not None:
-            await _setup_menu(tg_bot, settings)
+            await _setup_menu(tg_bot, settings, catalog)
             if run_polling:
                 polling_task = asyncio.create_task(
                     dispatcher.start_polling(tg_bot, handle_signals=False)
@@ -89,27 +89,42 @@ def create_app(settings: Settings | None = None, bot=None, run_polling: bool = T
     return app
 
 
-async def _setup_menu(bot, settings: Settings) -> None:
-    """Кнопка меню слева от поля ввода в чате с ботом — открывает Mini App."""
-    if not settings.webapp_url:
-        log.warning("PUBLIC_URL не задан — кнопка меню бота не настроена")
-        return
+async def _setup_menu(bot, settings: Settings, catalog) -> None:
+    """Профиль бота: описание, команды и кнопка меню, открывающая Mini App."""
     from aiogram.types import BotCommand, MenuButtonWebApp, WebAppInfo
 
-    try:
-        await bot.set_chat_menu_button(
-            menu_button=MenuButtonWebApp(text=settings.hub_name, web_app=WebAppInfo(url=settings.webapp_url))
-        )
-        await bot.set_my_commands(
+    from . import texts
+
+    # Описание видно в пустом чате до первого /start, короткое — в профиле бота.
+    # Каждый вызов отдельно: если Telegram ограничит частоту одного, остальные всё равно применятся.
+    calls = [
+        ("описание", bot.set_my_description(description=texts.bot_description(catalog, settings.hub_name))),
+        ("короткое описание", bot.set_my_short_description(short_description=texts.bot_short_description(catalog))),
+        ("команды", bot.set_my_commands(
             [
                 BotCommand(command="start", description=f"Открыть {settings.hub_name}"),
+                BotCommand(command="plans", description="Тарифы и цены"),
                 BotCommand(command="help", description="Как это работает"),
                 BotCommand(command="paysupport", description="Вопросы по оплате"),
                 BotCommand(command="terms", description="Условия подписки"),
             ]
+        )),
+    ]
+    for what, call in calls:
+        try:
+            await call
+        except Exception as exc:  # не валим сервер, если Telegram временно недоступен
+            log.warning("Не удалось настроить %s бота: %s", what, exc)
+
+    if not settings.webapp_url:
+        log.warning("PUBLIC_URL не задан — кнопка меню бота не настроена")
+        return
+    try:
+        await bot.set_chat_menu_button(
+            menu_button=MenuButtonWebApp(text=settings.hub_name, web_app=WebAppInfo(url=settings.webapp_url))
         )
-    except Exception as exc:  # не валим сервер, если Telegram временно недоступен
-        log.warning("Не удалось настроить меню бота: %s", exc)
+    except Exception as exc:
+        log.warning("Не удалось настроить кнопку меню: %s", exc)
 
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")

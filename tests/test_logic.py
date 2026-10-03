@@ -31,6 +31,11 @@ def make_init_data(user_id=42, first_name="Арсений", auth_date=None, toke
 
 
 class InitDataTests(unittest.TestCase):
+    def test_signature_field_is_part_of_hash(self):
+        # Так присылает настоящий Telegram: signature подписан вместе с остальными полями.
+        data = verify_init_data(make_init_data(signature="c2lnbmF0dXJl"), TOKEN)
+        self.assertEqual(data.user.id, 42)
+
     def test_valid(self):
         data = verify_init_data(make_init_data(start_param="buy_velora"), TOKEN)
         self.assertEqual(data.user.id, 42)
