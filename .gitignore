@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 orbit.db
 .DS_Store
+.claude/
