@@ -1,0 +1,6 @@
+.env
+.venv/
+__pycache__/
+*.pyc
+orbit.db
+.DS_Store

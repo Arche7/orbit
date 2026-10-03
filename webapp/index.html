@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <title>ORBIT</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="glow" aria-hidden="true"></div>
+
+  <main class="page" id="page" aria-busy="true">
+    <header class="top">
+      <span class="wordmark" id="wordmark">ORBIT</span>
+      <span class="stars-pill" id="statusPill" hidden></span>
+    </header>
+
+    <!-- Главный элемент: орбита. Планета светится — приложение подключено. -->
+    <section class="orbit-wrap" aria-label="Твои приложения на орбите">
+      <div class="orbit" id="orbit">
+        <svg class="orbit-ring" viewBox="0 0 320 200" preserveAspectRatio="none" aria-hidden="true">
+          <ellipse cx="160" cy="100" rx="150" ry="78" />
+        </svg>
+        <div class="core" id="core" aria-hidden="true">·</div>
+      </div>
+      <h1 class="hello" id="hello">Загружаю…</h1>
+      <p class="hello-sub" id="helloSub"></p>
+    </section>
+
+    <section class="bundle" id="bundle" hidden>
+      <div class="bundle-text">
+        <h2 id="bundleName"></h2>
+        <p id="bundleTagline"></p>
+      </div>
+      <div class="bundle-price">
+        <span class="price"><b id="bundlePrice"></b> ⭐ в месяц</span>
+        <span class="was" id="bundleWas"></span>
+      </div>
+      <button class="btn btn-primary" id="bundleBtn" type="button">Подключить всё</button>
+    </section>
+
+    <section class="block" aria-labelledby="appsTitle">
+      <h2 class="block-title" id="appsTitle">Приложения</h2>
+      <ul class="apps" id="apps"></ul>
+    </section>
+
+    <section class="block" id="subsBlock" aria-labelledby="subsTitle" hidden>
+      <h2 class="block-title" id="subsTitle">Мои подписки</h2>
+      <ul class="subs" id="subs"></ul>
+    </section>
+
+    <p class="fineprint">
+      Оплата через Telegram Stars, продление раз в 30 дней.
+      Отключить продление можно здесь или в настройках Telegram — доступ останется до конца оплаченного месяца.
+    </p>
+  </main>
+
+  <!-- Шторка приложения -->
+  <div class="sheet-backdrop" id="backdrop" hidden></div>
+  <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetName" hidden>
+    <div class="sheet-hero" id="sheetHero">
+      <span class="sheet-mono" id="sheetMono"></span>
+      <div>
+        <h2 id="sheetName"></h2>
+        <p id="sheetTagline"></p>
+      </div>
+    </div>
+    <div class="sheet-body">
+      <p class="sheet-status" id="sheetStatus"></p>
+      <ul class="features" id="sheetFeatures"></ul>
+      <div class="sheet-actions" id="sheetActions"></div>
+    </div>
+    <button class="sheet-close" id="sheetClose" type="button" aria-label="Закрыть">✕</button>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

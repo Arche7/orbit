@@ -1,0 +1,69 @@
+{
+  "bundle": {
+    "code": "all",
+    "name": "Всё включено",
+    "tagline": "Все приложения ORBIT одной подпиской — и все будущие тоже",
+    "price_stars": 349
+  },
+  "apps": [
+    {
+      "code": "mera",
+      "name": "MERA",
+      "tagline": "Запись к мастерам и память о каждом клиенте",
+      "status": "live",
+      "price_stars": 249,
+      "link": "https://t.me/mera_business_bot?startapp=orbit",
+      "monogram": "M",
+      "colors": {"from": "#3A2A1E", "to": "#16100C", "accent": "#D8B27A"},
+      "features": [
+        "Онлайн-запись клиентов без звонков",
+        "Память о клиенте: что любит, когда был, что напомнить",
+        "Автопилот: готовые действия на каждый день",
+        "Статистика и склад в одном месте"
+      ]
+    },
+    {
+      "code": "velora",
+      "name": "VELORA",
+      "tagline": "Привычки и цели с ИИ-коучем",
+      "status": "live",
+      "price_stars": 99,
+      "link": "https://t.me/YOUR_VELORA_BOT?startapp=orbit",
+      "monogram": "V",
+      "colors": {"from": "#2A2D30", "to": "#0E0F10", "accent": "#43E08A"},
+      "features": [
+        "Трекер привычек и целей",
+        "ИИ-коуч с разбором недели",
+        "Голосом: скажи — ИИ разложит по задачам",
+        "Напоминания и отчёты"
+      ]
+    },
+    {
+      "code": "delta",
+      "name": "DELTA",
+      "tagline": "Расходы, доходы и курсы валют",
+      "status": "live",
+      "price_stars": 99,
+      "link": "https://t.me/YOUR_DELTA_BOT?startapp=orbit",
+      "monogram": "Δ",
+      "colors": {"from": "#2B1D5C", "to": "#0D0820", "accent": "#9C84FF"},
+      "features": [
+        "Учёт расходов и доходов в любой валюте",
+        "Курсы ₽, $, €, ¥ и крипты",
+        "Запись трат с iPhone в одно касание",
+        "Общий бюджет на двоих"
+      ]
+    },
+    {
+      "code": "next",
+      "name": "Новое приложение",
+      "tagline": "Уже в работе. Подписчики «Всё включено» получат его первыми",
+      "status": "soon",
+      "price_stars": 99,
+      "link": "",
+      "monogram": "+",
+      "colors": {"from": "#1C1C1F", "to": "#0B0B0D", "accent": "#8A8A93"},
+      "features": []
+    }
+  ]
+}
